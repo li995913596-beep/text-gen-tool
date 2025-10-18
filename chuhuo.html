@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>出货计划 - 入库出货文本生成工具</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{max-width:900px;margin:28px auto;padding:20px;background:#f7fafc}
+    h1{font-size:22px;margin:0 0 10px}
+    a.back{display:inline-block;margin-bottom:10px;text-decoration:none;color:#0ea5a4}
+    .card{background:#fff;padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(20,20,20,0.06)}
+    label{display:block;font-size:13px;margin:10px 0 6px;color:#333}
+    input[type=text], input[type=date]{width:100%;padding:8px 10px;border-radius:6px;border:1px solid #d6d6d6;font-size:14px}
+    .row{display:flex;gap:10px}
+    .row > *{flex:1}
+    .item{border:1px dashed #e2e8f0;padding:10px;border-radius:8px;margin-bottom:10px;background:#fbfdff}
+    .controls{display:flex;gap:8px;margin-top:12px}
+    button{padding:8px 12px;border-radius:8px;border:0;background:#0ea5a4;color:white;cursor:pointer}
+    button.ghost{background:#edf2f7;color:#111}
+    pre#result{white-space:pre-wrap;background:#0f172a;color:#f8fafc;padding:12px;border-radius:8px;max-height:360px;overflow:auto}
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back">← 返回首页</a>
+  <div class="card">
+    <h1>出货计划</h1>
+    <label>日期</label><input id="date" type="date">
+    <label>单位或车牌</label><input id="vehicle" type="text">
+    <label>客户</label><input id="customer" type="text">
+    <div id="items"></div>
+    <div class="controls">
+      <button id="add">+ 添加货项</button>
+      <button id="generate">生成文字</button>
+      <button id="copy" class="ghost">复制</button>
+    </div>
+    <pre id="result">（请先填写表单）</pre>
+  </div>
+  <script>
+    const itemsDiv=document.getElementById('items');function addItem(v={}){const i=document.createElement('div');i.className='item';i.innerHTML=`<label>ကုဒ်နိပတ်/编号</label><input type=text name=code value='${v.code||''}'><label>အရောင်ကုဒ်色号</label><input type=text name=color value='${v.color||''}'><label>အလျားအနံ/规格</label><input type=text name=spec value='${v.spec||''}'><label>အရေအတွက်/数量</label><input type=text name=qty value='${v.qty||''}'>`;itemsDiv.appendChild(i)}addItem();document.getElementById('add').onclick=()=>addItem();document.getElementById('generate').onclick=()=>{let t='出货计划\n日期：'+date.value+'\n单位或车牌：'+vehicle.value+'\n客户：'+customer.value+'\n\n';[...itemsDiv.children].forEach((it,idx)=>{const v={code:it.querySelector('[name=code]').value,color:it.querySelector('[name=color]').value,spec:it.querySelector('[name=spec]').value,qty:it.querySelector('[name=qty]').value};t+=`${idx+1}.ကုဒ်နိပတ်/编号：${v.code}\nအရောင်ကုဒ်色号：${v.color}\nအလျားအနံ/规格：${v.spec}\nအရေအတွက်/数量：${v.qty}\n\n`});result.textContent=t.trim()};document.getElementById('copy').onclick=()=>{navigator.clipboard.writeText(result.textContent)};
+  </script>
+</body>
+</html>
